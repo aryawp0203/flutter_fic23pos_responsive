@@ -1,0 +1,11 @@
+PS D:\Programming\JagoFlutter\FIC23-POS\flutter_fic23pos_responsive> flutter pub run build_runner build --delete-conflicting-outputs  
+Deprecated. Use `dart run` instead.
+Building package executable... (15.4s)
+Built build_runner:build_runner.
+23s compiling builders/jit
+25s freezed on 72 inputs: 2 output, 70 no-op; spent 22s sdk, 2s analyzing, 1s building
+0s flutter_gen_runner on 1 input: 1 output
+
+Built with build_runner/jit in 56s; wrote 3 outputs.
+
+---

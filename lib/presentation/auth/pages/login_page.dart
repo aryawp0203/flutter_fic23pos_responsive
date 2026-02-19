@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_fic23pos_responsive/presentation/auth/bloc/login/login_bloc.dart';
 import 'package:flutter_fic23pos_responsive/presentation/home/pages/dashboard_page.dart';
 import 'package:flutter_fic23pos_responsive/presentation/tablet/home/pages/dashboard_tablet_page.dart';
 
@@ -73,21 +74,48 @@ class _LoginPageState extends State<LoginPage> {
             obscureText: true,
           ),
           const SpaceHeight(24.0),
-          Button.filled(
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) {
-                    // return DashboardPage();
-                    return screenSize.width > 600
-                        ? DashboardTabletPage()
-                        : DashboardPage();
-                  },
-                ),
-              );
+          BlocListener<LoginBloc, LoginState>(
+            listener: (context, state) {
+              switch (state) {
+                case Success():
+                  Navigator.pushReplacement(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return screenSize.width > 600
+                            ? DashboardTabletPage()
+                            : DashboardPage();
+                      },
+                    ),
+                  );
+                case Failure(message: final message):
+                  ScaffoldMessenger.of(
+                    context,
+                  ).showSnackBar(SnackBar(content: Text(message)));
+                default:
+                  break;
+              }
             },
-            label: 'Login',
+            child: BlocBuilder<LoginBloc, LoginState>(
+              builder: (context, state) {
+                switch (state) {
+                  case Loading():
+                    return const Center(child: CircularProgressIndicator());
+                  case _:
+                    return Button.filled(
+                      onPressed: () {
+                        context.read<LoginBloc>().add(
+                          LoginEvent.login(
+                            email: usernameController.text,
+                            password: passwordController.text,
+                          ),
+                        );
+                      },
+                      label: 'Login',
+                    );
+                }
+              },
+            ),
           ),
         ],
       ),
